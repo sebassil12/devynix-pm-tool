@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('projects/', include('apps.projects.api.urls')),
     path('notebooks/', include('apps.notebooks.api.urls')),
-    # path('api/v1/kanban/', include('apps.kanban.urls')),
+    path('kanban/', include('apps.kanban.api.urls')),
 ]
