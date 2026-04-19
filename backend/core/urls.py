@@ -19,7 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/projects/', include('apps.projects.urls')),
-    path('api/v1/notebooks/', include('apps.notebooks.urls')),
-    path('api/v1/kanban/', include('apps.kanban.urls')),
+    path('projects/', include('apps.projects.api.urls')),
+    # path('api/v1/notebooks/', include('apps.notebooks.urls')),
+    # path('api/v1/kanban/', include('apps.kanban.urls')),
 ]

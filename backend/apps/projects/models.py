@@ -1,15 +1,17 @@
 from django.db import models
-
-class Project(models.Model):
+from apps.base.models import BaseModel
+class Project(BaseModel):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Project'
+        verbose_name_plural = 'Projects'
 
     def __str__(self):
         return str(self.title)
 
-class Node(models.Model):
+class Node(BaseModel):
     class NodeType(models.TextChoices):
         KANBAN = 'kanban', 'Kanban'
         NOTEBOOK = 'notebook', 'Notebook'
@@ -20,7 +22,11 @@ class Node(models.Model):
     title = models.CharField(max_length=255)
     type = models.CharField(max_length=20, choices=NodeType.choices)
     position = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['position']
+        verbose_name = 'Node'
+        verbose_name_plural = 'Nodes'
+        
     def __str__(self):
         return f"{self.title} ({self.type})"

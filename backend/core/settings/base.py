@@ -34,6 +34,7 @@ LOCAL_APPS = [
     'apps.projects.apps.ProjectsConfig',
     'apps.notebooks.apps.NotebooksConfig',
     'apps.kanban.apps.KanbanConfig',
+    'apps.base.apps.BaseConfig',
 ]
 
 THIRD_APPS = [
