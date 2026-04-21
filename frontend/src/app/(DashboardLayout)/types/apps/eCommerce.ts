@@ -1,35 +1,7 @@
 
-export interface ProductType {
-  title: string;
-  price: number | any;
-  discount: number;
-  related: boolean;
-  salesPrice: number;
-  category: string[];
-  gender: string;
-  rating: number;
-  stock: boolean;
-  qty: number;
-  colors: string[];
-  photo: string;
-  id: number | string;
-  created: Date | any;
-  description: string;
-}
-
-export interface ProductFiterType {
+export interface Project {
   id: number;
-  filterbyTitle?: string;
-  name?: string;
-  sort?: string;
-  icon?:  any;
-  devider?: boolean;
-}
-
-export interface ProductCardProps {
-  id?: string | number;
-  color?: string;
-  like: string;
-  star: number;
-  value?: string;
+  title: string;
+  description: string;
+  created_at: Date | any;
 }

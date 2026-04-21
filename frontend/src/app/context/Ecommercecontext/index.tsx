@@ -2,13 +2,13 @@
 
 import React, { createContext, useState, useEffect } from 'react';
 
-import { ProductType } from '@/app/(DashboardLayout)/types/apps/eCommerce';
+import { Project } from '@/app/(DashboardLayout)/types/apps/eCommerce';
 import { deleteFetcher, getFetcher, postFetcher, putFetcher } from '@/app/api/globalFetcher';
 import useSWR from 'swr';
 
 // Define ProductContextType based on imported types
 interface ProductContextType {
-    products: ProductType[];
+    projects: Project[];
     searchProduct: string;
     selectedCategory: string;
     sortBy: string;
@@ -17,8 +17,8 @@ interface ProductContextType {
     selectedColor: string;
     loading: boolean;
     error: any;
-    cartItems: ProductType[];
-    setProducts: React.Dispatch<React.SetStateAction<ProductType[]>>;
+    cartItems: Project[];
+    setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
     setSearchProduct: React.Dispatch<React.SetStateAction<string>>;
     setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
     setSortBy: React.Dispatch<React.SetStateAction<string>>;
@@ -26,7 +26,7 @@ interface ProductContextType {
     setSelectedGender: React.Dispatch<React.SetStateAction<string>>;
     setSelectedColor: React.Dispatch<React.SetStateAction<string>>;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-    setCartItems: React.Dispatch<React.SetStateAction<ProductType[]>>;
+    setCartItems: React.Dispatch<React.SetStateAction<Project[]>>;
     deleteProduct: (productId: number | string) => void;
     searchProducts: (searchText: string) => void;
     updateSortBy: (sortOption: string) => void;
@@ -39,10 +39,10 @@ interface ProductContextType {
     removeFromCart: (id: number | string) => void;
     addToCart: (item: any) => void;
     deleteAllProducts: () => void;
-    filteredAndSortedProducts: ProductType[];
+    filteredAndSortedProducts: Project[];
     filterReset: () => void;
-    getProductById: (productId: string) => ProductType | undefined;
-    updateProduct: (productId: string, updatedProduct: ProductType) => void;
+    getProjectById: (projectId: number) => Project | undefined;
+    updateProject: (projectId: number, updatedProject: Project) => void;
 
 
 }
@@ -52,7 +52,7 @@ export const ProductContext = createContext<ProductContextType>({} as ProductCon
 
 // Provider Component
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [products, setProducts] = useState<ProductType[]>([]);
+    const [projects, setProjects] = useState<Project[]>([]);
     const [searchProduct, setSearchProduct] = useState<string>('');
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
     const [sortBy, setSortBy] = useState<string>('newest');
@@ -77,7 +77,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     
     useEffect(() => {
         if(productsData){
-            setProducts(productsData.data);
+            setProjects(productsData.data);
             setLoading(isProductsLoading);
         }else if(productsError){
             setError(productsError);
@@ -119,44 +119,31 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }, []);
 
     // Function to filter products based on search, category, price range, gender, and color
-    const filterProducts = (product: ProductType) => {
-        const matchesSearch = product.title.toLowerCase().includes(searchProduct.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || product.category.includes(selectedCategory);
-        const withinPriceRange = (priceRange === 'All') ||
-            (priceRange === '0-50' && product.price <= 50) ||
-            (priceRange === '50-100' && product.price > 50 && product.price <= 100) ||
-            (priceRange === '100-200' && product.price > 100 && product.price <= 200) ||
-            (priceRange === '200-99999' && product.price > 200);
-        const matchesGender = selectedGender === 'All' || product.gender === selectedGender;
-        const matchesColor = selectedColor === 'All' || product.colors.includes(selectedColor);
+    const filterProducts = (project: Project) => {
+        const matchesSearch = project.title.toLowerCase().includes(searchProduct.toLowerCase());
+        const matchesDescription = selectedCategory === 'All' || project.description.includes(selectedCategory);
 
-        return matchesSearch && matchesCategory && withinPriceRange && matchesGender && matchesColor;
+        return matchesSearch && matchesDescription
     };
 
     // Function to sort filtered products based on selected sort option
-    const sortProducts = (filteredProducts: ProductType[]) => {
+    const sortProducts = (filteredProjects: Project[]) => {
         switch (sortBy) {
             case 'newest':
-                return filteredProducts.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
-            case 'priceDesc':
-                return filteredProducts.sort((a, b) => b.price - a.price);
-            case 'priceAsc':
-                return filteredProducts.sort((a, b) => a.price - b.price);
-            case 'discount':
-                return filteredProducts.sort((a, b) => (b.discount || 0) - (a.discount || 0));
+                return filteredProjects.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
             default:
-                return filteredProducts;
+                return filteredProjects;
         }
     };
 
-    // Function to fetch a product by its ID
-    const getProductById = (productId: string) => {
-        const product = products.find(p => p.id === Number(productId));
-        return product;
+    // Function to fetch a project by its ID
+    const getProjectById = (projectId: number) => {
+        const project = projects.find(p => p.id === Number(projectId));
+        return project;
     };
 
     // Filter and sort products
-    const filteredProducts = products.filter(filterProducts);
+    const filteredProducts = projects.filter(filterProducts);
     const filteredAndSortedProducts = sortProducts(filteredProducts);
 
     // Function to handle selecting a category
@@ -205,17 +192,17 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     // Function to delete a product
     const deleteProduct = (productId: number | string) => {
-        setProducts(products.filter(product => product.id !== productId));
+        setProjects(projects.filter(project => project.id !== productId));
     };
 
     // Function to delete all products
     const deleteAllProducts = () => {
-        setProducts([]);
+        setProjects([]);
     };
 
     //  Function to update a product
-    const updateProduct = (productId: string, updatedProduct: ProductType) => {
-        setProducts(products.map(product => product.id === Number(productId) ? updatedProduct : product));
+    const updateProject = (productId: number, updatedProduct: Project) => {
+        setProjects(projects.map(project => project.id === Number(productId) ? updatedProduct : project));
     };
 
     const filterReset = () => {
@@ -230,7 +217,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return (
         <ProductContext.Provider
             value={{
-                products,
+                projects,
                 searchProduct,
                 selectedCategory,
                 sortBy,
@@ -240,7 +227,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 loading,
                 error,
                 cartItems,
-                setProducts,
+                setProjects,
                 setSearchProduct,
                 setSelectedCategory,
                 setSortBy,
@@ -262,8 +249,8 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 addToCart,
                 deleteAllProducts,
                 filteredAndSortedProducts,
-                filterReset, getProductById,
-                updateProduct
+                filterReset, getProjectById,
+                updateProject
 
 
             }}

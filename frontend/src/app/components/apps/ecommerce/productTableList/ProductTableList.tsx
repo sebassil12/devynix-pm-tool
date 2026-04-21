@@ -21,7 +21,7 @@ import { format } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import SimpleBar from "simplebar-react";
-import { ProductType } from "@/app/(DashboardLayout)/types/apps/eCommerce";
+import { Project } from "@/app/(DashboardLayout)/types/apps/eCommerce";
 
 const ProductTablelist = () => {
   const {
@@ -38,7 +38,7 @@ const ProductTablelist = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [editedProduct, setEditedProduct] = useState<ProductType | null>(null);
+  const [editedProduct, setEditedProduct] = useState<Project | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [imageURL, setImageURL] = useState<string>("");
 
@@ -128,7 +128,7 @@ const ProductTablelist = () => {
   const handleDateChange = (created: Date | null) => {
     setSelectedDate(created);
     if (editedProduct) {
-      setEditedProduct({ ...editedProduct, created: created || new Date() });
+      setEditedProduct({ ...editedProduct, created_at: created || new Date() });
     }
   };
 
@@ -176,19 +176,13 @@ const ProductTablelist = () => {
                   />
                 </Table.HeadCell>
                 <Table.HeadCell className="text-base font-semibold py-3">
-                  Products
+                  Title
                 </Table.HeadCell>
                 <Table.HeadCell className="text-base font-semibold py-3">
-                  Date
+                  Description
                 </Table.HeadCell>
                 <Table.HeadCell className="text-base font-semibold py-3">
-                  Status
-                </Table.HeadCell>
-                <Table.HeadCell className="text-base font-semibold py-3">
-                  Price
-                </Table.HeadCell>
-                <Table.HeadCell className="text-base font-semibold py-3">
-                  Action
+                  Created At
                 </Table.HeadCell>
               </Table.Head>
 

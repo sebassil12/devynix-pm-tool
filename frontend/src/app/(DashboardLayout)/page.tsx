@@ -1,7 +1,30 @@
-import React from 'react'
+import React from "react";
+import BreadcrumbComp from "@/app/(DashboardLayout)/layout/shared/breadcrumb/BreadcrumbComp";
+import { Metadata } from "next";
+import { ProductProvider } from '@/app/context/Ecommercecontext/index';
+import ProductTableList from '@/app/components/apps/ecommerce/productTableList/ProductTableList'
 
-export default function page() {
+const BCrumb = [
+  {
+    to: "/",
+    title: "Home",
+  },
+  {
+    title: "Project List",
+  },
+];
+export const metadata: Metadata = {
+  title: "Project List",
+};
+const EcomProductList = () => {
   return (
-    <div>page</div>
+    <>
+      <ProductProvider>
+        <BreadcrumbComp title="Project list" items={BCrumb} />
+        <ProductTableList />
+      </ProductProvider>
+    </>
   )
 }
+
+export default EcomProductList
